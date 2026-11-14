@@ -4,338 +4,198 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VexLauncher // Next-Gen Minecraft Client</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Consolas&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #07090e;
-            --card-bg: rgba(22, 27, 34, 0.7);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --primary: #2ea043;
-            --primary-glow: rgba(46, 160, 67, 0.4);
-            --accent: #3fb950;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(46, 160, 67, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(63, 185, 80, 0.08) 0%, transparent 40%);
+            background-color: #07090e;
+            color: #ffffff;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 80px;
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(7, 9, 14, 0.8);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            padding: 20px 50px;
+            border-bottom: 1px solid #1f242d;
         }
-
-        .logo {
-            font-weight: 800;
-            font-size: 22px;
-            color: #fff;
-            letter-spacing: -0.5px;
+        .logo-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
-
-        .logo img {
-            width: 34px;
-            height: 34px;
+        .logo-box {
+            background-color: #0a120d;
+            border: 1px solid #2ea043;
+            color: #2ea043;
+            font-weight: bold;
+            padding: 8px 12px;
             border-radius: 8px;
-            object-fit: cover;
-            box-shadow: 0 0 15px var(--primary-glow);
+            font-size: 18px;
         }
-
-        .logo span {
-            color: var(--primary);
-            text-shadow: 0 0 20px var(--primary-glow);
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1px;
         }
-
+        .logo-text span {
+            color: #2ea043;
+        }
         nav {
             display: flex;
             align-items: center;
             gap: 30px;
         }
-
         nav a {
-            color: var(--text-muted);
+            color: #94a3b8;
             text-decoration: none;
-            font-weight: 600;
             font-size: 14px;
-            transition: color 0.2s ease;
+            font-weight: 500;
+            transition: color 0.2s;
         }
-
         nav a:hover {
-            color: #fff;
+            color: #ffffff;
         }
-
-        .nav-btn {
-            background: rgba(46, 160, 67, 0.1);
-            border: 1px solid rgba(46, 160, 67, 0.3);
-            padding: 8px 18px;
+        .btn-download-nav {
+            background-color: transparent;
+            border: 1px solid #2ea043;
+            color: #2ea043;
+            padding: 8px 20px;
             border-radius: 8px;
-            color: var(--primary) !important;
-            transition: all 0.2s ease !important;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
         }
-
-        .nav-btn:hover {
-            background: var(--primary);
-            color: #fff !important;
-            box-shadow: 0 0 15px var(--primary-glow);
+        .btn-download-nav:hover {
+            background-color: #2ea043;
+            color: #ffffff;
         }
-
-        .hero {
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 120px 20px 80px;
-            max-width: 900px;
-            margin: 0 auto;
+            padding: 0 20px;
         }
-
         .badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(46, 160, 67, 0.1);
-            border: 1px solid rgba(46, 160, 67, 0.2);
-            padding: 6px 14px;
-            border-radius: 30px;
+            background-color: #141f17;
+            border: 1px solid #2ea043;
+            color: #3fb950;
+            padding: 6px 16px;
+            border-radius: 20px;
             font-size: 13px;
             font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 25px;
-            box-shadow: 0 0 20px rgba(46, 160, 67, 0.1);
+            margin-bottom: 30px;
         }
-
-        .hero h1 {
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #3fb950;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #3fb950;
+        }
+        h1 {
             font-size: 56px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
+            font-weight: 900;
             line-height: 1.1;
-            background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            max-width: 900px;
+            margin-bottom: 25px;
+            letter-spacing: -1px;
         }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        h1 span {
+            color: #2ea043;
         }
-
-        .hero p {
-            font-size: 18px;
-            color: var(--text-muted);
-            margin-bottom: 40px;
+        .description {
+            color: #94a3b8;
+            font-size: 16px;
+            max-width: 650px;
             line-height: 1.6;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-bottom: 45px;
         }
-
-        .hero-buttons {
+        .cta-buttons {
             display: flex;
-            justify-content: center;
             gap: 15px;
-            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
         }
-
-        .btn-download {
-            background: linear-gradient(135deg, var(--primary), #238636);
+        .btn-main {
+            background-color: #2ea043;
             color: #ffffff;
-            padding: 16px 36px;
-            font-size: 16px;
-            font-weight: 700;
-            border: none;
+            padding: 15px 32px;
             border-radius: 12px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.25s ease;
-            box-shadow: 0 10px 30px rgba(46, 160, 67, 0.4);
-        }
-
-        .btn-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(46, 160, 67, 0.6);
-        }
-
-        .btn-secondary {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 16px 28px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            backdrop-filter: blur(10px);
-            transition: all 0.25s ease;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            padding: 40px 80px 100px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 35px;
-            backdrop-filter: blur(16px);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(46, 160, 67, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card-icon {
-            font-size: 32px;
-            margin-bottom: 20px;
-            display: inline-block;
-            background: rgba(46, 160, 67, 0.1);
-            padding: 12px;
-            border-radius: 14px;
-            border: 1px solid rgba(46, 160, 67, 0.2);
-        }
-
-        .card h3 {
-            font-size: 20px;
-            margin-bottom: 12px;
             font-weight: 700;
-            color: #fff;
-        }
-
-        .card p {
-            color: var(--text-muted);
+            text-decoration: none;
             font-size: 15px;
-            line-height: 1.6;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 4px 14px rgba(46, 160, 67, 0.4);
         }
-
+        .btn-main:hover {
+            background-color: #238636;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background-color: #21262d;
+            color: #ffffff;
+            padding: 15px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 15px;
+            border: 1px solid #30363d;
+            transition: background-color 0.2s;
+        }
+        .btn-secondary:hover {
+            background-color: #30363d;
+        }
         footer {
+            padding: 30px;
             text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            font-size: 14px;
-            background: rgba(7, 9, 14, 0.5);
-        }
-
-        @media (max-width: 768px) {
-            header { padding: 20px 20px; }
-            .features { padding: 20px 20px 60px; }
-            .hero h1 { font-size: 38px; }
-            .hero { padding: 80px 20px 40px; }
+            color: #484f58;
+            font-size: 13px;
+            border-top: 1px solid #1f242d;
         }
     </style>
 </head>
 <body>
-
     <header>
-        <div class="logo">
-            <img src="logo.png" alt="VexLauncher Logo">
-            VEX<span>LAUNCHER</span>
+        <div class="logo-container">
+            <div class="logo-box">V</div>
+            <div class="logo-text">VEX <span>LAUNCHER</span></div>
         </div>
         <nav>
             <a href="#features">Features</a>
             <a href="https://github.com/vexxiox/VexLauncher" target="_blank">GitHub</a>
-            <a href="https://github.com/vexxiox/VexLauncher/releases/download/v1.1/VexLauncher_Setup.exe" class="nav-btn">Download</a>
+            <a href="https://github.com/vexxiox/VexLauncher/releases/latest/download/VexLauncher_Setup.exe" class="btn-download-nav">Download</a>
         </nav>
     </header>
 
-    <div class="hero">
+    <main>
         <div class="badge">
-            <span>🟢</span> v1.1 Release Available Now
+            <div class="badge-dot"></div>
+            v1.1 Release Available Now
         </div>
         <h1>The Ultimate <span>High-Performance</span> Minecraft Launcher</h1>
-        <p>Engineered for speed. Experience instant local caching, seamless Microsoft OAuth login, built-in Modrinth mod browser, and custom themes designed for elite players.</p>
-        <div class="hero-buttons">
-            <a href="https://github.com/vexxiox/VexLauncher/releases/download/v1.1/VexLauncher_Setup.exe" class="btn-download">
-                📥 Download for Windows
-            </a>
-            <a href="https://github.com/vexxiox/VexLauncher" target="_blank" class="btn-secondary">
-                ⭐ Star on GitHub
-            </a>
+        <p class="description">Engineered for speed. Experience instant local caching, seamless Microsoft OAuth login, built-in Modrinth mod browser, and custom themes designed for elite players.</p>
+        <div class="cta-buttons">
+            <a href="https://github.com/vexxiox/VexLauncher/releases/latest/download/VexLauncher_Setup.exe" class="btn-main">📥 Download for Windows</a>
+            <a href="https://github.com/vexxiox/VexLauncher" target="_blank" class="btn-secondary">⭐ Star on GitHub</a>
         </div>
-    </div>
-
-    <div class="features" id="features">
-        <div class="card">
-            <div class="card-icon">⚡</div>
-            <h3>Blazing-Fast Startup</h3>
-            <p>Optimized with instant local cache loading and advanced G1GC JVM flags to get you straight into the action with zero lag.</p>
-        </div>
-        <div class="card">
-            <div class="card-icon">📦</div>
-            <h3>Modrinth Integration</h3>
-            <p>Search, browse, and install top-tier Fabric performance mods like Sodium and Lithium directly inside the built-in manager.</p>
-        </div>
-        <div class="card">
-            <div class="card-icon">🔐</div>
-            <h3>Official Microsoft Auth</h3>
-            <p>Fully secure native Microsoft and Xbox OAuth login workflow ensuring your account stays completely protected.</p>
-        </div>
-    </div>
+    </main>
 
     <footer>
-        <p>&copy; 2026 VexLauncher. Built for high-performance gaming.</p>
+        &copy; 2026 VexLauncher. Open-source Minecraft utility.
     </footer>
-
 </body>
 </html>
