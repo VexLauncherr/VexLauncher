@@ -30,7 +30,6 @@ jobs:
         import re
         import os
 
-        # Pročitaj main.py i pronađi verziju
         with open("main.py", "r", encoding="utf-8") as f:
             content = f.read()
 
@@ -43,7 +42,6 @@ jobs:
         version_tag = f"v{ver}" if not ver.startswith("v") else ver
         print(f"Detektirana verzija iz main.py: {version_tag}")
 
-        # Pročitaj index.html i zamijeni staru verziju novom
         with open("index.html", "r", encoding="utf-8") as f:
             html = f.read()
 
@@ -52,7 +50,6 @@ jobs:
         with open("index.html", "w", encoding="utf-8") as f:
             f.write(new_html)
 
-        # Spremi verziju u GitHub environment varijablu
         with open(os.environ['GITHUB_ENV'], 'a') as env_file:
             env_file.write(f"LAUNCHER_VERSION={version_tag}\n")
 
@@ -74,12 +71,22 @@ jobs:
       run: |
         pyinstaller --noconsole --onefile --name "VexLauncher" main.py
 
-    - name: Instaliraj Inno Setup alat
-      uses: pwall2222/inno-setup-download@v0.0.8
+    - name: Instaliraj Inno Setup preko Chocolatey
+      run: |
+        choco install innosetup -y
 
     - name: Kreiraj Setup Wizard (.exe) pomoću Inno Setup-a
       run: |
         iscc setup.iss
+
+    - name: Obriši stari Release/Tag ako postoji da nema konflikta
+      uses: dev-drprasad/delete-tag-and-release@v1.1
+      with:
+        tag_name: ${{ env.LAUNCHER_VERSION }}
+        delete_release: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
 
     - name: Kreiraj Release i učitaj Setup Wizard
       uses: softprops/action-gh-release@v2
