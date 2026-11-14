@@ -1,13 +1,17 @@
-name: Build VexLauncher EXE
+name: Auto Build Setup Wizard & Release
 
 on:
   push:
-    tags:
-      - 'v*' # Pokreće se automatski kad god staviš tag (npr. v1.1)
+    branches:
+      - main
+    paths:
+      - 'main.py'
 
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write # Dozvoljava Actionsu da spremi promjene natrag u repo
 
     steps:
     - name: Izvuci kod (Checkout)
@@ -18,7 +22,50 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Instaliraj sve potrebne biblioteke
+    - name: Automatski ažuriraj index.html iz main.py
+      shell: python
+      run: |
+        import re
+        import os
+
+        # Pročitaj main.py
+        with open("main.py", "r", encoding="utf-8") as f:
+            content = f.read()
+
+        # Pronađi verziju u main.py
+        match = re.search(r'"launcherVersion":\s*"([^"]+)"', content)
+        if match:
+            ver = match.group(1)
+        else:
+            ver = "1.1"
+
+        version_tag = f"v{ver}" if not ver.startswith("v") else ver
+        print(f"Detektirana verzija: {version_tag}")
+
+        # Pročitaj index.html i zamijeni verziju
+        with open("index.html", "r", encoding="utf-8") as f:
+            html = f.read()
+
+        new_html = re.sub(r'v[0-9]+\.[0-9]+\s+Release Available Now', f'{version_tag} Release Available Now', html)
+        if new_html == html:
+            new_html = re.sub(r'v[0-9]+\.[0-9]+', version_tag, html)
+
+        with open("index.html", "w", encoding="utf-8") as f:
+            f.write(new_html)
+
+        # Spremi verziju u GitHub varijablu
+        with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+            env_file.write(f"LAUNCHER_VERSION={version_tag}\n")
+
+    - name: Spremi izmjene index.html natrag na GitHub
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add index.html
+        git diff --staged --quiet || git commit -m "Auto-update index.html to ${{ env.LAUNCHER_VERSION }}"
+        git push
+
+    - name: Instaliraj Python biblioteke
       run: |
         python -m pip install --upgrade pip
         pip install customtkinter pywebview requests minecraft-launcher-lib pyinstaller
@@ -27,9 +74,18 @@ jobs:
       run: |
         pyinstaller --noconsole --onefile --name "VexLauncher" main.py
 
-    - name: Kreiraj Release i učitaj EXE automatski
-      uses: softprops/action-gh-release@v1
+    - name: Instaliraj Inno Setup alat
+      uses: pwall2222/inno-setup-download@v0.0.8
+
+    - name: Kreiraj Setup Wizard (.exe) pomoću Inno Setup-a
+      run: |
+        iscc setup.iss
+
+    - name: Kreiraj Release i učitaj Setup Wizard
+      uses: softprops/action-gh-release@v2
       with:
-        files: dist/VexLauncher.exe
+        tag_name: ${{ env.LAUNCHER_VERSION }}
+        name: VexLauncher ${{ env.LAUNCHER_VERSION }}
+        files: Output/VexLauncher_Setup.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
