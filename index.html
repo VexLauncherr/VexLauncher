@@ -230,4 +230,101 @@
         .card:hover {
             transform: translateY(-5px);
             border-color: rgba(59, 130, 246, 0.3);
-            box-shadow: 0 20px 40px rgba(0,
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 20px;
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+            background: rgba(7, 9, 14, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 20px 20px; }
+            .features { padding: 20px 20px 60px; }
+            .hero h1 { font-size: 38px; }
+            .hero { padding: 80px 20px 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">⚡ VEX<span>LAUNCHER</span></div>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="https://github.com/teoxyrx9pro-stack/VexLauncher" target="_blank">GitHub</a>
+            <a href="https://github.com/teoxyrx9pro-stack/VexLauncher/releases/download/v1.0/VexLauncher_Setup.exe" class="nav-btn">Download</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <div class="badge">
+            <span>🔥</span> v1.0 Release Available Now
+        </div>
+        <h1>The Ultimate <span>High-Performance</span> Minecraft Launcher</h1>
+        <p>Engineered for speed. Experience instant local caching, seamless Microsoft OAuth login, built-in Modrinth mod browser, and custom cyberpunk themes designed for elite players.</p>
+        <div class="hero-buttons">
+            <a href="https://github.com/teoxyrx9pro-stack/VexLauncher/releases/download/v1.0/VexLauncher_Setup.exe" class="btn-download">
+                📥 Download for Windows
+            </a>
+            <a href="https://github.com/teoxyrx9pro-stack/VexLauncher" target="_blank" class="btn-secondary">
+                ⭐ Star on GitHub
+            </a>
+        </div>
+    </div>
+
+    <div class="features" id="features">
+        <div class="card">
+            <div class="card-icon">⚡</div>
+            <h3>Blazing-Fast Startup</h3>
+            <p>Optimized with instant local cache loading and advanced G1GC JVM flags to get you straight into the action with zero lag.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">📦</div>
+            <h3>Modrinth Integration</h3>
+            <p>Search, browse, and install top-tier Fabric performance mods like Sodium and Lithium directly inside the built-in manager.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">🔐</div>
+            <h3>Official Microsoft Auth</h3>
+            <p>Fully secure native Microsoft and Xbox OAuth login workflow ensuring your account stays completely protected.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 VexLauncher. Built for high-performance gaming.</p>
+    </footer>
+
+</body>
+</html>
