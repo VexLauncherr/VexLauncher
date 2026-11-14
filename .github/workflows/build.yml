@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'main.py'
 
 jobs:
   build:
@@ -30,14 +28,26 @@ jobs:
         if exist dist rmdir /s /q dist
         if exist Output rmdir /s /q Output
 
-    - name: Detektiraj verziju iz main.py i automatski ažuriraj web i setup.iss
+    - name: Detektiraj verziju i automatski ažuriraj web i setup.iss
       shell: python
       run: |
         import re
         import os
 
-        # 1. Čita verziju iz tvog main.py (npr. "launcherVersion": "1.2")
-        with open("main.py", "r", encoding="utf-8") as f:
+        # Pronađi Python datoteku u root-u (bilo da je main.py, app.py ili drugo)
+        py_files = [f for f in os.listdir('.') if f.endswith('.py')]
+        target_py = "main.py"
+        for pf in py_files:
+            with open(pf, "r", encoding="utf-8", errors="ignore") as f:
+                if "launcherVersion" in f.read() or "version" in f.read():
+                    target_py = pf
+                    break
+
+        print(f"Koristim Python skriptu: {target_py}")
+        with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+            env_file.write(f"PY_SCRIPT={target_py}\n")
+
+        with open(target_py, "r", encoding="utf-8") as f:
             content = f.read()
 
         match = re.search(r'"launcherVersion":\s*"v?([0-9]+\.[0-9]+)"', content)
@@ -46,19 +56,18 @@ jobs:
         
         raw_ver = match.group(1) if match else "1.2"
         version_tag = f"v{raw_ver}"
-        print(f"Pronađena verzija iz main.py: {version_tag}")
+        print(f"Pronađena verzija: {version_tag}")
 
-        # 2. Automatski mijenja index.html (diže verziju s 1.1 -> 1.2 -> 1.3...)
-        with open("index.html", "r", encoding="utf-8") as f:
-            html = f.read()
+        # Ažuriraj index.html
+        if os.path.exists("index.html"):
+            with open("index.html", "r", encoding="utf-8") as f:
+                html = f.read()
+            html = re.sub(r'v[0-9]+\.[0-9]+\s+Release Available Now', f'{version_tag} Release Available Now', html)
+            html = re.sub(r'releases/download/v[0-9]+\.[0-9]+/VexLauncher_Setup\.exe', f'releases/download/{version_tag}/VexLauncher_Setup.exe', html)
+            with open("index.html", "w", encoding="utf-8") as f:
+                f.write(html)
 
-        html = re.sub(r'v[0-9]+\.[0-9]+\s+Release Available Now', f'{version_tag} Release Available Now', html)
-        html = re.sub(r'releases/download/v[0-9]+\.[0-9]+/VexLauncher_Setup\.exe', f'releases/download/{version_tag}/VexLauncher_Setup.exe', html)
-
-        with open("index.html", "w", encoding="utf-8") as f:
-            f.write(html)
-
-        # 3. Ažurira verziju u setup.iss
+        # Ažuriraj setup.iss
         if os.path.exists("setup.iss"):
             with open("setup.iss", "r", encoding="utf-8") as f:
                 iss = f.read()
@@ -66,27 +75,26 @@ jobs:
             with open("setup.iss", "w", encoding="utf-8") as f:
                 f.write(iss)
 
-        # 4. Sprema verziju za GitHub Actions
         with open(os.environ['GITHUB_ENV'], 'a') as env_file:
             env_file.write(f"LAUNCHER_VERSION={version_tag}\n")
 
-    - name: Spremi izmjene index.html i setup.iss natrag na GitHub
+    - name: Spremi izmjene natrag na GitHub
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-        git add index.html setup.iss
+        git add index.html setup.iss || true
         git commit -m "Auto-update version to ${{ env.LAUNCHER_VERSION }}" || echo "No changes to commit"
-        git push
+        git push || true
 
     - name: Instaliraj Python biblioteke
       run: |
         python -m pip install --upgrade pip
         pip install customtkinter pywebview requests minecraft-launcher-lib pyinstaller
 
-    - name: Kompajliraj novi EXE iz main.py
+    - name: Kompajliraj novi EXE
       run: |
-        pyinstaller --noconsole --onefile --name "VexLauncher" main.py
+        pyinstaller --noconsole --onefile --name "VexLauncher" ${{ env.PY_SCRIPT }}
 
     - name: Instaliraj Inno Setup preko Chocolatey
       run: |
