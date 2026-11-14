@@ -28,11 +28,10 @@ jobs:
         import re
         import os
 
-        # Pročitaj main.py
+        # 1. Pročitaj main.py i pronađi verziju
         with open("main.py", "r", encoding="utf-8") as f:
             content = f.read()
 
-        # Pronađi verziju u main.py
         match = re.search(r'"launcherVersion":\s*"([^"]+)"', content)
         if match:
             ver = match.group(1)
@@ -40,20 +39,20 @@ jobs:
             ver = "1.1"
 
         version_tag = f"v{ver}" if not ver.startswith("v") else ver
-        print(f"Detektirana verzija: {version_tag}")
+        print(f"Detektirana verzija iz main.py: {version_tag}")
 
-        # Pročitaj index.html i zamijeni verziju
+        # 2. Pročitaj index.html
         with open("index.html", "r", encoding="utf-8") as f:
             html = f.read()
 
-        new_html = re.sub(r'v[0-9]+\.[0-9]+\s+Release Available Now', f'{version_tag} Release Available Now', html)
-        if new_html == html:
-            new_html = re.sub(r'v[0-9]+\.[0-9]+', version_tag, html)
+        # 3. Sigurna zamjena bilo koje stare verzije (npr. v1.0) u index.html
+        # Pronalazi bilo koji format tipa v1.0, v1.1... i mijenja ga s novom verzijom
+        new_html = re.sub(r'v[0-9]+\.[0-9]+', version_tag, html)
 
         with open("index.html", "w", encoding="utf-8") as f:
             f.write(new_html)
 
-        # Spremi verziju u GitHub varijablu
+        # 4. Spremi verziju u GitHub environment varijablu
         with open(os.environ['GITHUB_ENV'], 'a') as env_file:
             env_file.write(f"LAUNCHER_VERSION={version_tag}\n")
 
@@ -62,7 +61,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add index.html
-        git diff --staged --quiet || git commit -m "Auto-update index.html to ${{ env.LAUNCHER_VERSION }}"
+        git commit -m "Auto-update index.html to ${{ env.LAUNCHER_VERSION }}" || echo "No changes to commit"
         git push
 
     - name: Instaliraj Python biblioteke
@@ -84,8 +83,8 @@ jobs:
     - name: Kreiraj Release i učitaj Setup Wizard
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ env.LAUNCHER_VERSION }}
-        name: VexLauncher ${{ env.LAUNCHER_VERSION }}
+        tag_name: ${{ env.LAUNCH_VERSION }}
+        name: VexLauncher ${{ env.LAUNCH_VERSION }}
         files: Output/VexLauncher_Setup.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
