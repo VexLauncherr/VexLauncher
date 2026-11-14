@@ -24,12 +24,13 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Automatski ažuriraj index.html iz main.py
+    - name: Automatski ažuriraj index.html i detektiraj verziju
       shell: python
       run: |
         import re
         import os
 
+        # Pročitaj main.py i pronađi verziju (npr. v1.2 ili 1.2)
         with open("main.py", "r", encoding="utf-8") as f:
             content = f.read()
 
@@ -37,19 +38,27 @@ jobs:
         if match:
             ver = match.group(1)
         else:
-            ver = "1.1"
+            # Alternativni tražilac ako je verzija zapisana negdje drugdje u kodu
+            match_alt = re.search(r'v([0-9]+\.[0-9]+)', content)
+            ver = match_alt.group(1) if match_alt else "1.2"
 
         version_tag = f"v{ver}" if not ver.startswith("v") else ver
-        print(f"Detektirana verzija iz main.py: {version_tag}")
+        print(f"Automatski detektirana verzija iz main.py: {version_tag}")
 
+        # Otvori index.html i automatski zamijeni i bedž verzije i link za download u letu!
         with open("index.html", "r", encoding="utf-8") as f:
             html = f.read()
 
-        new_html = re.sub(r'v[0-9]+\.[0-9]+', version_tag, html)
+        # 1. Zamijeni tekst verzije na bedžu (npr. v1.0 / v1.1 -> nova verzija)
+        new_html = re.sub(r'v[0-9]+\.[0-9]+\s+Release Available Now', f'{version_tag} Release Available Now', html)
+        
+        # 2. Zamijeni i direktne linkove za download u index.html da uvijek gađaju novu verziju!
+        new_html = re.sub(r'releases/download/v[0-9]+\.[0-9]+/VexLauncher_Setup\.exe', f'releases/download/{version_tag}/VexLauncher_Setup.exe', new_html)
 
         with open("index.html", "w", encoding="utf-8") as f:
             f.write(new_html)
 
+        # Spremi verziju u GitHub varijablu da je ostali koraci mogu koristiti
         with open(os.environ['GITHUB_ENV'], 'a') as env_file:
             env_file.write(f"LAUNCHER_VERSION={version_tag}\n")
 
@@ -59,7 +68,7 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
         git add index.html
-        git commit -m "Auto-update index.html to ${{ env.LAUNCHER_VERSION }}" || echo "No changes to commit"
+        git commit -m "Auto-update index.html and version to ${{ env.LAUNCHER_VERSION }}" || echo "No changes to commit"
         git push
 
     - name: Instaliraj Python biblioteke
