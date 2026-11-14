@@ -783,7 +783,7 @@ class VexLauncherApp(ctk.CTk):
         self.log_message(f"Starting installation of mod '{title}' for version {selected_version}...")
 
         url = f"https://api.modrinth.com/v2/project/{project_id}/version"
-        headers = {"User-Agent": "VexLauncher/1.1"}
+        headers = {"User-Agent": "VexLauncher/1.2"}
 
         try:
             resp = requests.get(url, headers=headers, timeout=10)
