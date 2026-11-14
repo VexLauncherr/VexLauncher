@@ -335,7 +335,7 @@ class VexLauncherApp(ctk.CTk):
         self.title_bar.bind("<Button-1>", self.start_move)
         self.title_bar.bind("<B1-Motion>", self.do_move)
 
-        title_lbl = ctk.CTkLabel(self.title_bar, text="  VEXLAUNCHER v1.1 // HORIZON ENGINE", font=ctk.CTkFont(size=12, weight="bold"), text_color="#aaa")
+        title_lbl = ctk.CTkLabel(self.title_bar, text="  VEXLAUNCHER v1.2 // HORIZON ENGINE", font=ctk.CTkFont(size=12, weight="bold"), text_color="#aaa")
         title_lbl.pack(side="left")
         title_lbl.bind("<Button-1>", self.start_move)
         title_lbl.bind("<B1-Motion>", self.do_move)
