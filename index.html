@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VexLauncher // Horizon Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Consolas&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background-color: #0d1117;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 80px;
+            border-bottom: 1px solid #21262d;
+            background: #161b22;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 20px;
+            color: #58a6ff;
+            letter-spacing: 1px;
+        }
+        nav a {
+            color: #8b949e;
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        nav a:hover {
+            color: #ffffff;
+        }
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #58a6ff, #1f6feb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 18px;
+            color: #8b949e;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .btn-download {
+            background-color: #1f6feb;
+            color: #ffffff;
+            padding: 15px 35px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 0 20px rgba(31, 111, 235, 0.4);
+        }
+        .btn-download:hover {
+            background-color: #388bfd;
+            transform: translateY(-2px);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 50px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 14px;
+            padding: 30px;
+            transition: border-color 0.2s;
+        }
+        .card:hover {
+            border-color: #58a6ff;
+        }
+        .card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #58a6ff;
+        }
+        .card p {
+            color: #8b949e;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #484f58;
+            border-top: 1px solid #21262d;
+            margin-top: 50px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">⚡ VEXLAUNCHER</div>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="https://github.com/TvojGitHubUsername/VexLauncher" target="_blank">GitHub</a>
+            <a href="https://github.com/TvojGitHubUsername/VexLauncher/releases/latest" target="_blank">Download</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h1>Blazing-Fast Minecraft Launcher</h1>
+        <p>Built with Horizon Engine. Experience seamless Microsoft OAuth login, instant Modrinth mod browsing, live console debugging, and custom themes designed for high-performance players.</p>
+        <a href="https://github.com/TvojGitHubUsername/VexLauncher/releases/latest/download/VexLauncher.exe" class="btn-download">Download for Windows (.exe)</a>
+    </div>
+
+    <div class="features" id="features">
+        <div class="card">
+            <h3>🚀 Blazing Fast</h3>
+            <p>Optimized startup times with instant cache loading and custom G1GC JVM flags to get you straight into the action.</p>
+        </div>
+        <div class="card">
+            <h3>📦 Modrinth Integration</h3>
+            <p>Search, browse, and install Fabric performance mods like Sodium and Lithium directly from the built-in mod manager.</p>
+        </div>
+        <div class="card">
+            <h3>🔐 Secure Microsoft Auth</h3>
+            <p>Full native Microsoft/Xbox OAuth login support keeping your account safe and connected.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 VexLauncher // Horizon Engine. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
