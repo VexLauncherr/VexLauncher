@@ -24,50 +24,59 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Očisti stare build i dist mape (Da nema keša)
+    - name: Očisti stare build i dist mape
       run: |
         if exist build rmdir /s /q build
         if exist dist rmdir /s /q dist
         if exist Output rmdir /s /q Output
 
-    - name: Automatski ažuriraj index.html i detektiraj verziju
+    - name: Detektiraj verziju iz main.py i automatski ažuriraj web i setup.iss
       shell: python
       run: |
         import re
         import os
 
+        # 1. Čita verziju iz tvog main.py (npr. "launcherVersion": "1.2")
         with open("main.py", "r", encoding="utf-8") as f:
             content = f.read()
 
-        match = re.search(r'"launcherVersion":\s*"([^"]+)"', content)
-        if match:
-            ver = match.group(1)
-        else:
-            match_alt = re.search(r'v([0-9]+\.[0-9]+)', content)
-            ver = match_alt.group(1) if match_alt else "1.2"
+        match = re.search(r'"launcherVersion":\s*"v?([0-9]+\.[0-9]+)"', content)
+        if not match:
+            match = re.search(r'v([0-9]+\.[0-9]+)', content)
+        
+        raw_ver = match.group(1) if match else "1.2"
+        version_tag = f"v{raw_ver}"
+        print(f"Pronađena verzija iz main.py: {version_tag}")
 
-        version_tag = f"v{ver}" if not ver.startswith("v") else ver
-        print(f"Detektirana verzija: {version_tag}")
-
+        # 2. Automatski mijenja index.html (diže verziju s 1.1 -> 1.2 -> 1.3...)
         with open("index.html", "r", encoding="utf-8") as f:
             html = f.read()
 
-        new_html = re.sub(r'v[0-9]+\.[0-9]+\s+Release Available Now', f'{version_tag} Release Available Now', html)
-        new_html = re.sub(r'releases/download/v[0-9]+\.[0-9]+/VexLauncher_Setup\.exe', f'releases/download/{version_tag}/VexLauncher_Setup.exe', new_html)
+        html = re.sub(r'v[0-9]+\.[0-9]+\s+Release Available Now', f'{version_tag} Release Available Now', html)
+        html = re.sub(r'releases/download/v[0-9]+\.[0-9]+/VexLauncher_Setup\.exe', f'releases/download/{version_tag}/VexLauncher_Setup.exe', html)
 
         with open("index.html", "w", encoding="utf-8") as f:
-            f.write(new_html)
+            f.write(html)
 
+        # 3. Ažurira verziju u setup.iss
+        if os.path.exists("setup.iss"):
+            with open("setup.iss", "r", encoding="utf-8") as f:
+                iss = f.read()
+            iss = re.sub(r'AppVersion=[0-9]+\.[0-9]+', f'AppVersion={raw_ver}', iss)
+            with open("setup.iss", "w", encoding="utf-8") as f:
+                f.write(iss)
+
+        # 4. Sprema verziju za GitHub Actions
         with open(os.environ['GITHUB_ENV'], 'a') as env_file:
             env_file.write(f"LAUNCHER_VERSION={version_tag}\n")
 
-    - name: Spremi izmjene index.html natrag na GitHub
+    - name: Spremi izmjene index.html i setup.iss natrag na GitHub
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-        git add index.html
-        git commit -m "Auto-update index.html to ${{ env.LAUNCHER_VERSION }}" || echo "No changes to commit"
+        git add index.html setup.iss
+        git commit -m "Auto-update version to ${{ env.LAUNCHER_VERSION }}" || echo "No changes to commit"
         git push
 
     - name: Instaliraj Python biblioteke
@@ -75,7 +84,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install customtkinter pywebview requests minecraft-launcher-lib pyinstaller
 
-    - name: Kompajliraj u SVJEŽI EXE pomoću PyInstallera
+    - name: Kompajliraj novi EXE iz main.py
       run: |
         pyinstaller --noconsole --onefile --name "VexLauncher" main.py
 
@@ -83,11 +92,11 @@ jobs:
       run: |
         choco install innosetup -y
 
-    - name: Kreiraj Setup Wizard (.exe) pomoću Inno Setup-a
+    - name: Kreiraj Setup Wizard (.exe)
       run: |
         iscc setup.iss
 
-    - name: Obriši stari Release/Tag ako postoji
+    - name: Obriši stari Release ako postoji
       uses: dev-drprasad/delete-tag-and-release@v1.1
       with:
         tag_name: ${{ env.LAUNCHER_VERSION }}
@@ -96,7 +105,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
 
-    - name: Kreiraj Release i učitaj Novi Setup Wizard
+    - name: Kreiraj novi Release i učitaj Wizard
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ env.LAUNCHER_VERSION }}
