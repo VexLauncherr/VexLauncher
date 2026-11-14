@@ -10,9 +10,9 @@
             --bg-color: #07090e;
             --card-bg: rgba(22, 27, 34, 0.7);
             --border-color: rgba(255, 255, 255, 0.08);
-            --primary: #3b82f6;
-            --primary-glow: rgba(59, 130, 246, 0.4);
-            --accent: #8b5cf6;
+            --primary: #2ea043;
+            --primary-glow: rgba(46, 160, 67, 0.4);
+            --accent: #3fb950;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -29,8 +29,8 @@
             color: var(--text-main);
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(46, 160, 67, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(63, 185, 80, 0.08) 0%, transparent 40%);
             min-height: 100vh;
         }
 
@@ -54,7 +54,15 @@
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 0 15px var(--primary-glow);
         }
 
         .logo span {
@@ -81,8 +89,8 @@
         }
 
         .nav-btn {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            background: rgba(46, 160, 67, 0.1);
+            border: 1px solid rgba(46, 160, 67, 0.3);
             padding: 8px 18px;
             border-radius: 8px;
             color: var(--primary) !important;
@@ -106,15 +114,15 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            background: rgba(46, 160, 67, 0.1);
+            border: 1px solid rgba(46, 160, 67, 0.2);
             padding: 6px 14px;
             border-radius: 30px;
             font-size: 13px;
             font-weight: 600;
             color: var(--primary);
             margin-bottom: 25px;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 20px rgba(46, 160, 67, 0.1);
         }
 
         .hero h1 {
@@ -152,7 +160,7 @@
         }
 
         .btn-download {
-            background: linear-gradient(135deg, var(--primary), #2563eb);
+            background: linear-gradient(135deg, var(--primary), #238636);
             color: #ffffff;
             padding: 16px 36px;
             font-size: 16px;
@@ -165,12 +173,12 @@
             align-items: center;
             gap: 10px;
             transition: all 0.25s ease;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 10px 30px rgba(46, 160, 67, 0.4);
         }
 
         .btn-download:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6);
+            box-shadow: 0 15px 35px rgba(46, 160, 67, 0.6);
         }
 
         .btn-secondary {
@@ -229,7 +237,7 @@
 
         .card:hover {
             transform: translateY(-5px);
-            border-color: rgba(59, 130, 246, 0.3);
+            border-color: rgba(46, 160, 67, 0.3);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
@@ -241,10 +249,10 @@
             font-size: 32px;
             margin-bottom: 20px;
             display: inline-block;
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(46, 160, 67, 0.1);
             padding: 12px;
             border-radius: 14px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(46, 160, 67, 0.2);
         }
 
         .card h3 {
@@ -280,7 +288,10 @@
 <body>
 
     <header>
-        <div class="logo">⚡ VEX<span>LAUNCHER</span></div>
+        <div class="logo">
+            <img src="VexLauncher.ico" alt="VexLauncher Logo">
+            VEX<span>LAUNCHER</span>
+        </div>
         <nav>
             <a href="#features">Features</a>
             <a href="https://github.com/vexxiox/VexLauncher" target="_blank">GitHub</a>
@@ -290,10 +301,10 @@
 
     <div class="hero">
         <div class="badge">
-            <span>🔥</span> v1.0 Release Available Now
+            <span>🟢</span> v1.0 Release Available Now
         </div>
         <h1>The Ultimate <span>High-Performance</span> Minecraft Launcher</h1>
-        <p>Engineered for speed. Experience instant local caching, seamless Microsoft OAuth login, built-in Modrinth mod browser, and custom cyberpunk themes designed for elite players.</p>
+        <p>Engineered for speed. Experience instant local caching, seamless Microsoft OAuth login, built-in Modrinth mod browser, and custom themes designed for elite players.</p>
         <div class="hero-buttons">
             <a href="https://github.com/vexxiox/VexLauncher/releases/download/v1.0/VexLauncher_Setup.exe" class="btn-download">
                 📥 Download for Windows
